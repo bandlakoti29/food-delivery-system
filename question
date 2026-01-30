@@ -1,0 +1,19 @@
+OOP Design
+
+Classes
+
+User (name, address)
+
+Restaurant (menu, price list)
+
+Order (items, total price)
+
+DeliveryPartner (abstract)
+
+BikeDelivery
+
+CarDelivery
+
+DroneDelivery
+
+Each delivery type calculates delivery fee differently (polymorphism).
