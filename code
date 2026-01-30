@@ -1,0 +1,95 @@
+from abc import ABC, abstractmethod
+
+# -------------------- User Class --------------------
+class User:
+    def __init__(self, name, address):
+        self.name = name
+        self.address = address
+
+
+# -------------------- Restaurant Class --------------------
+class Restaurant:
+    def __init__(self, menu, price_list):
+        self.menu = menu                  # list of items
+        self.price_list = price_list      # dictionary {item: price}
+
+    def show_menu(self):
+        print("Menu:")
+        for item in self.menu:
+            print(f"{item} - ₹{self.price_list[item]}")
+
+
+# -------------------- Order Class --------------------
+class Order:
+    def __init__(self, user, restaurant, items):
+        self.user = user
+        self.restaurant = restaurant
+        self.items = items
+        self.total_price = self.calculate_total()
+
+    def calculate_total(self):
+        total = 0
+        for item in self.items:
+            total += self.restaurant.price_list.get(item, 0)
+        return total
+
+    def show_order(self):
+        print(f"\nOrder for {self.user.name}")
+        print("Items:", ", ".join(self.items))
+        print("Food Total: ₹", self.total_price)
+
+
+# -------------------- Delivery Partner (Abstract) --------------------
+class DeliveryPartner(ABC):
+
+    @abstractmethod
+    def calculate_delivery_fee(self, distance):
+        pass
+
+
+# -------------------- Bike Delivery --------------------
+class BikeDelivery(DeliveryPartner):
+    def calculate_delivery_fee(self, distance):
+        return 10 + (distance * 2)   # base fee + per km
+
+
+# -------------------- Car Delivery --------------------
+class CarDelivery(DeliveryPartner):
+    def calculate_delivery_fee(self, distance):
+        return 20 + (distance * 4)
+
+
+# -------------------- Drone Delivery --------------------
+class DroneDelivery(DeliveryPartner):
+    def calculate_delivery_fee(self, distance):
+        return 50 + (distance * 6)
+
+
+# -------------------- Simulation --------------------
+if __name__ == "__main__":
+
+    # Create User
+    user1 = User("Koti", "Hyderabad")
+
+    # Create Restaurant
+    menu = ["Pizza", "Burger", "Pasta"]
+    prices = {"Pizza": 250, "Burger": 120, "Pasta": 180}
+    rest = Restaurant(menu, prices)
+
+    rest.show_menu()
+
+    # Place Order
+    order1 = Order(user1, rest, ["Pizza", "Pasta"])
+    order1.show_order()
+
+    # Choose Delivery Type
+    distance = 5  # in kilometers
+
+    bike = BikeDelivery()
+    car = CarDelivery()
+    drone = DroneDelivery()
+
+    print("\nDelivery Charges:")
+    print("Bike Delivery Fee: ₹", bike.calculate_delivery_fee(distance))
+    print("Car Delivery Fee: ₹", car.calculate_delivery_fee(distance))
+    print("Drone Delivery Fee: ₹", drone.calculate_delivery_fee(distance))
